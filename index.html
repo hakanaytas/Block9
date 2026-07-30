@@ -6,7 +6,7 @@
 <title>Block 9</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
   /* ===================== ROOT & RESET ===================== */
   *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; user-select:none; }
@@ -41,15 +41,49 @@
   #comboWrap span{ color:#ffd23f; font-weight:800; font-size:15px; }
 
   .top-badge{
-    position: fixed; top: max(18px, env(safe-area-inset-top)); z-index:6;
-    background: rgba(255,255,255,0.14); backdrop-filter: blur(6px);
-    color:#fff; border:none; border-radius:14px; font-weight:700;
+    position: fixed; top: max(18px, env(safe-area-inset-top)); z-index:26;
+    background: linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0.1));
+    backdrop-filter: blur(8px);
+    color:#fff; border:1.5px solid rgba(255,255,255,0.35); border-radius:16px; font-weight:800;
     display:flex; align-items:center; justify-content:center; gap:4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.5);
+    font-family:'Nunito', sans-serif;
   }
-  #bestBadge{ right:16px; padding:8px 12px; font-size:13px; }
-  #coinBadge{ right:16px; top: max(60px, calc(env(safe-area-inset-top) + 46px)); padding:6px 12px; font-size:13px; color:#ffd23f; }
-  #menuBtn{ left:16px; width:40px; height:40px; font-size:17px; cursor:pointer; }
-  #soundBtn{ left:64px; width:40px; height:40px; font-size:16px; cursor:pointer; }
+  #bestBadge{
+    right:16px; padding:7px 12px; font-size:13px; color:#5c3400;
+    background: linear-gradient(180deg,#fff4d6,#ffdb8a); border-color:#e8a93f;
+    box-shadow: 0 4px 0 #c9860f, 0 8px 16px rgba(180,110,10,0.3), inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  #coinBadge{
+    right:16px; top: max(62px, calc(env(safe-area-inset-top) + 48px)); padding:6px 12px; font-size:13px; color:#5c3400;
+    background: linear-gradient(180deg,#fff4d6,#ffdb8a); border-color:#e8a93f;
+    box-shadow: 0 4px 0 #c9860f, 0 8px 16px rgba(180,110,10,0.3), inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  #menuBtn{ left:16px; width:42px; height:42px; font-size:17px; cursor:pointer; }
+  #soundBtn{ left:66px; width:42px; height:42px; font-size:16px; cursor:pointer; }
+  /* Menü/skor ekranı açıkken duraklatma HUD'u gizlensin, kart içindeki kendi coin/gem gösterimi öne çıksın */
+  body:has(.overlay:not(.hidden)) #menuBtn,
+  body:has(.overlay:not(.hidden)) #soundBtn,
+  body:has(.overlay:not(.hidden)) #bestBadge,
+  body:has(.overlay:not(.hidden)) #coinBadge{ opacity:0; pointer-events:none; }
+  #menuBtn, #soundBtn, #bestBadge, #coinBadge{ transition: opacity .2s ease; }
+
+  /* ---- Menü kartı içi premium para göstergesi (Coin sol / Gem sağ) ---- */
+  .curRow{ display:flex; align-items:center; justify-content:space-between; margin: -6px 0 14px; gap:8px; }
+  .curPill{
+    display:flex; align-items:center; gap:6px; padding:7px 8px 7px 6px; border-radius:16px; font-weight:900; font-size:13.5px;
+    font-family:'Nunito', sans-serif; box-shadow: 0 3px 0 rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .curPill .curIco{ width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; box-shadow: inset 0 -2px 3px rgba(0,0,0,0.15), inset 0 2px 2px rgba(255,255,255,0.5); }
+  .curPill.coinPill{ background: linear-gradient(180deg,#fff4d6,#ffcf6e); color:#7a4600; border:1.5px solid #e8a93f; }
+  .curPill.coinPill .curIco{ background: radial-gradient(circle at 35% 30%, #fff2b0, #ffb300 70%); }
+  .curPill.gemPill{ background: linear-gradient(180deg,#eee0ff,#c9a4ff); color:#3c1a66; border:1.5px solid #9a63e8; }
+  .curPill.gemPill .curIco{ background: radial-gradient(circle at 35% 30%, #f0e6ff, #8a4fe0 70%); }
+  .addCoinBtn{
+    width:20px; height:20px; border-radius:50%; background:linear-gradient(180deg,#8bec8b,#2f9e4f);
+    color:#fff; font-weight:900; font-size:13px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 0 #1f7a38; border:1px solid rgba(255,255,255,0.6); cursor:pointer; flex-shrink:0;
+  }
 
   #hint{
     position: fixed; bottom: max(40px, env(safe-area-inset-bottom) + 24px);
@@ -94,25 +128,97 @@
   @keyframes toastIn{ 0%{opacity:0; transform:translateX(-50%) translateY(-14px);} 100%{opacity:1; transform:translateX(-50%) translateY(0);} }
   @keyframes toastOut{ 0%{opacity:1;} 100%{opacity:0; transform:translateX(-50%) translateY(-14px);} }
 
-  /* ===================== OVERLAY / SCREENS — DESERT UI ===================== */
+  /* ===================== OVERLAY / SCREENS — PREMIUM SKY UI ===================== */
   .overlay{
     position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
     z-index:20; padding:18px; overflow:hidden;
-    background: linear-gradient(180deg, #ffe3a3 0%, #ffb24a 32%, #fa8a3d 62%, #e4602a 100%);
+    background:
+      radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+      linear-gradient(180deg, #8fd0ff 0%, #a9def5 22%, #cdeeff 46%, #eaf7ff 72%, #fff6e6 100%);
   }
   .hidden{ display:none !important; }
 
-  /* Menü arka planı seçili temaya göre canvas ile üretilip #mainOverlay arka planına basılıyor (bkz. buildThemedBackdrop / refreshMenuBackdrop) */
+  /* ---- Dekoratif menü arka planı: gökyüzü / dağ / bulut / parçacık katmanları ---- */
+  .menu-scene{ position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .menu-scene .zoomLayer{ position:absolute; inset:-4%; animation: menuZoom 22s ease-in-out infinite; }
+
+  .glare{ position:absolute; border-radius:50%; filter:blur(2px); opacity:.55; mix-blend-mode:screen; }
+  .glare.g1{ width:260px; height:260px; top:-60px; left:-40px; background:radial-gradient(circle,#fff,rgba(255,255,255,0) 70%); animation: glarePulse 6s ease-in-out infinite; }
+  .glare.g2{ width:180px; height:180px; top:8%; right:-20px; background:radial-gradient(circle,#fff6d8,rgba(255,246,216,0) 70%); animation: glarePulse 7.5s ease-in-out infinite 1.2s; }
+
+  .mountain{ position:absolute; bottom:0; left:0; width:100%; height:46%; }
+  .mountain svg{ width:100%; height:100%; display:block; }
+  .mountain.back{ opacity:.55; }
+  .mountain.front{ opacity:.85; }
+
+  .cloud{
+    position:absolute; background:#fff; border-radius:100px; opacity:.85;
+    box-shadow: 40px 6px 0 -6px #fff, -35px 10px 0 -8px #fff, 70px -4px 0 -10px rgba(255,255,255,0.8);
+    animation-name: cloudDrift; animation-timing-function: linear; animation-iteration-count: infinite;
+  }
+  .cloud.c1{ width:110px; height:34px; top:9%;  left:-20%; animation-duration: 46s; opacity:.95; }
+  .cloud.c2{ width:80px;  height:26px; top:16%; left:-40%; animation-duration: 60s; animation-delay:-14s; opacity:.75; }
+  .cloud.c3{ width:140px; height:40px; top:5%;  left:-60%; animation-duration: 74s; animation-delay:-30s; opacity:.65; }
+  .cloud.c4{ width:70px;  height:24px; top:22%; left:-15%; animation-duration: 38s; animation-delay:-8s;  opacity:.9; }
+  @keyframes cloudDrift{ 0%{ transform:translateX(0); } 100%{ transform:translateX(160vw); } }
+  @keyframes menuZoom{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.045); } }
+  @keyframes glarePulse{ 0%,100%{ opacity:.3; } 50%{ opacity:.65; } }
+
+  .motes{ position:absolute; inset:0; }
+  .mote{
+    position:absolute; bottom:-6%; width:5px; height:5px; border-radius:50%;
+    background: rgba(255,255,255,0.85); box-shadow:0 0 6px 1px rgba(255,255,255,0.6);
+    animation-name: moteRise; animation-timing-function: ease-in; animation-iteration-count: infinite;
+  }
+  .mote:nth-child(1){ left:8%;  animation-duration:9s;  animation-delay:0s; }
+  .mote:nth-child(2){ left:20%; animation-duration:12s; animation-delay:1.4s; width:3px; height:3px;}
+  .mote:nth-child(3){ left:34%; animation-duration:10s; animation-delay:2.8s; }
+  .mote:nth-child(4){ left:48%; animation-duration:14s; animation-delay:.6s; width:4px; height:4px;}
+  .mote:nth-child(5){ left:60%; animation-duration:8s;  animation-delay:3.6s; }
+  .mote:nth-child(6){ left:72%; animation-duration:13s; animation-delay:1.9s; width:3px; height:3px;}
+  .mote:nth-child(7){ left:84%; animation-duration:11s; animation-delay:.2s; }
+  .mote:nth-child(8){ left:92%; animation-duration:9.5s; animation-delay:2.4s; width:4px; height:4px;}
+  @keyframes moteRise{
+    0%{ transform:translateY(0) translateX(0); opacity:0; }
+    10%{ opacity:.9; }
+    50%{ transform:translateY(-48vh) translateX(12px); }
+    90%{ opacity:.5; }
+    100%{ transform:translateY(-92vh) translateX(-8px); opacity:0; }
+  }
 
   .card{
-    position:relative; z-index:1;
-    background: linear-gradient(180deg, #fff9ee 0%, #fdecc8 100%);
-    border:4px solid #7a3510; border-radius:28px; padding:24px 22px; max-width:380px; width:100%;
+    position:relative; z-index:2;
+    background: linear-gradient(180deg, rgba(255,252,244,0.96) 0%, rgba(255,240,214,0.94) 100%);
+    border:4px solid #7a3510; border-radius: 42px 42px 46px 46px / 46px 46px 42px 42px;
+    padding:26px 22px 22px; max-width:380px; width:100%;
     max-height: 88vh; overflow-y:auto;
-    box-shadow: 0 10px 0 rgba(90,40,10,0.28), 0 24px 46px rgba(60,20,0,0.35);
-    animation: cardIn .28s cubic-bezier(.2,.9,.3,1.2);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,0.9),
+      inset 0 -18px 30px -20px rgba(122,53,16,0.18),
+      0 10px 0 rgba(90,40,10,0.28), 0 28px 50px rgba(40,15,0,0.4);
+    backdrop-filter: blur(2px);
+    animation: cardIn .4s cubic-bezier(.2,.9,.3,1.25);
   }
-  @keyframes cardIn{ 0%{transform:scale(0.9) translateY(10px); opacity:0;} 100%{transform:scale(1) translateY(0); opacity:1;} }
+  @keyframes cardIn{ 0%{transform:scale(0.86) translateY(18px); opacity:0;} 100%{transform:scale(1) translateY(0); opacity:1;} }
+
+  /* ---- Logo (BLOCK 9) ---- */
+  .logoWrap{ text-align:center; margin: -4px 0 6px; animation: logoDrop .6s cubic-bezier(.25,.9,.3,1.3); }
+  @keyframes logoDrop{ 0%{ transform:translateY(-60px) scale(.9); opacity:0; } 100%{ transform:translateY(0) scale(1); opacity:1; } }
+  .logoTitle{
+    font-family:'Baloo 2', 'Fredoka', sans-serif; font-weight:800; font-size:40px; letter-spacing:1px;
+    display:inline-block; color:#ffb347;
+    background: linear-gradient(180deg,#ffe08a 0%, #ffb23f 45%, #e2701a 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    -webkit-text-stroke: 2.5px #7a3208;
+    filter: drop-shadow(0 3px 0 #7a3208) drop-shadow(0 7px 0 #5c2504) drop-shadow(0 14px 18px rgba(90,40,10,0.45));
+    animation: logoBreathe 3.2s ease-in-out infinite;
+    line-height:1.05;
+  }
+  @keyframes logoBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.035); } }
+  .logoSub{
+    font-family:'Nunito', sans-serif; font-weight:800; font-size:12.5px; letter-spacing:1.5px; text-transform:uppercase;
+    color:#a9784a; margin-top:6px; opacity:.9;
+  }
 
   .card h1{
     font-family:'Fredoka', -apple-system, sans-serif; font-weight:700; font-size:29px; letter-spacing:.5px;
@@ -122,6 +228,21 @@
   }
   .card h2{ font-family:'Fredoka', sans-serif; font-size:19px; color:#5c2e0f; text-align:center; margin-bottom:2px; }
   .subtitle{ font-size:13px; color:#a9784a; margin-bottom:16px; font-weight:600; text-align:center; }
+
+  /* ---- Sıralı giriş animasyonu (bounce fade scale) ---- */
+  @keyframes btnIn{
+    0%{ opacity:0; transform: translateY(16px) scale(.82); }
+    60%{ opacity:1; transform: translateY(-3px) scale(1.03); }
+    100%{ opacity:1; transform: translateY(0) scale(1); }
+  }
+  .menu-anim > *{ animation: btnIn .5s cubic-bezier(.25,.9,.3,1.3) backwards; }
+  .menu-anim > *:nth-child(1){ animation-delay:.05s; }
+  .menu-anim > *:nth-child(2){ animation-delay:.12s; }
+  .menu-anim > *:nth-child(3){ animation-delay:.19s; }
+  .menu-anim > *:nth-child(4){ animation-delay:.26s; }
+  .menu-anim > *:nth-child(5){ animation-delay:.33s; }
+  .menu-anim > *:nth-child(6){ animation-delay:.40s; }
+  .menu-anim > *:nth-child(7){ animation-delay:.47s; }
 
   .screen-header{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
   .back-btn{
@@ -136,28 +257,49 @@
   .howto-emoji{ font-size:18px; width:22px; text-align:center; flex-shrink:0; }
 
   .big-btn{
-    width:100%; border:3px solid #7a3510; border-radius:24px; padding:15px; font-size:16px; font-weight:700;
+    width:100%; border:3px solid #7a3510; border-radius:26px; padding:16px 18px; font-size:16.5px; font-weight:700;
     font-family:'Fredoka', sans-serif; letter-spacing:.4px;
     color:#5c2e0f; text-shadow:0 1px 0 rgba(255,255,255,0.35);
     background: linear-gradient(180deg, #ffe38a 0%, #ffbb47 46%, #ff8a3d 100%);
-    box-shadow: 0 5px 0 #b34d16, 0 12px 22px rgba(179,77,22,0.35);
-    cursor:pointer; transition: transform .1s ease, box-shadow .1s ease; margin-bottom:10px;
-    position:relative; overflow:hidden;
+    box-shadow: 0 6px 0 #b34d16, 0 14px 26px rgba(179,77,22,0.38), inset 0 0 0 1.5px rgba(255,255,255,0.25);
+    cursor:pointer; transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; margin-bottom:11px;
+    position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; gap:8px;
   }
   .big-btn::before{
-    content:''; position:absolute; top:3px; left:8%; width:84%; height:36%;
-    background:rgba(255,255,255,0.45); border-radius:50%; filter:blur(2px); pointer-events:none;
+    content:''; position:absolute; top:3px; left:8%; width:84%; height:38%;
+    background:rgba(255,255,255,0.5); border-radius:50%; filter:blur(3px); pointer-events:none;
   }
-  .big-btn:active{ transform: translateY(3px); box-shadow: 0 2px 0 #b34d16, 0 5px 12px rgba(179,77,22,0.3); }
+  .big-btn::after{
+    content:''; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+    box-shadow: 0 0 0 0 rgba(255,197,89,0); transition: box-shadow .16s ease;
+  }
+  .big-btn:hover{ transform: translateY(-2px) scale(1.025); filter:brightness(1.05); }
+  .big-btn:hover::after{ box-shadow: 0 0 0 4px rgba(255,197,89,0.45), 0 0 18px 4px rgba(255,166,53,0.5); }
+  .big-btn:active{ transform: translateY(3px) scale(.98); box-shadow: 0 2px 0 #b34d16, 0 6px 14px rgba(179,77,22,0.32); filter:brightness(.97); }
   .big-btn.secondary{ background: linear-gradient(180deg,#fff3da,#ffdfa8); color:#7a4a1e; box-shadow: 0 5px 0 #d3a15a, 0 10px 18px rgba(90,40,10,0.18); }
   .big-btn.small{ padding:11px; font-size:13px; }
+  .big-btn .btnIco{ font-size:19px; filter: drop-shadow(0 1px 0 rgba(255,255,255,0.4)); }
+  .big-btn.gold-glow{ background: linear-gradient(180deg,#fff2c0,#ffce55 45%,#ff9d1f 100%); animation: shopGlow 2.4s ease-in-out infinite; }
+  @keyframes shopGlow{ 0%,100%{ box-shadow: 0 6px 0 #b3760f, 0 14px 26px rgba(255,170,20,0.35), inset 0 0 0 1.5px rgba(255,255,255,0.3);} 50%{ box-shadow: 0 6px 0 #b3760f, 0 16px 34px rgba(255,196,60,0.6), inset 0 0 0 1.5px rgba(255,255,255,0.5);} }
+  .new-tag{
+    position:absolute; top:-8px; right:10px; background:#ff3b5c; color:#fff; font-size:9.5px; font-weight:900;
+    padding:3px 7px; border-radius:8px; letter-spacing:.5px; box-shadow:0 3px 6px rgba(200,20,50,0.4);
+    border:1.5px solid #fff; transform:rotate(6deg);
+  }
+  .notif-dot{
+    position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%;
+    background:#ff3b5c; color:#fff; font-size:10.5px; font-weight:900; display:flex; align-items:center; justify-content:center;
+    border:2px solid #fff; box-shadow:0 2px 5px rgba(200,20,50,0.5);
+  }
 
   .menu-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
   .menu-tile{
-    background: linear-gradient(180deg,#ffe38a,#ffab54); border:3px solid #7a3510; border-radius:18px;
-    padding:14px 8px; text-align:center; cursor:pointer;
-    box-shadow: 0 4px 0 #b34d16; transition: transform .1s ease, box-shadow .1s ease;
+    background: linear-gradient(180deg,#ffe38a,#ffab54); border:3px solid #7a3510; border-radius:20px;
+    padding:14px 8px; text-align:center; cursor:pointer; position:relative; overflow:hidden;
+    box-shadow: 0 4px 0 #b34d16, inset 0 0 0 1px rgba(255,255,255,0.25); transition: transform .12s ease, box-shadow .12s ease;
   }
+  .menu-tile::before{ content:''; position:absolute; top:2px; left:10%; width:80%; height:34%; background:rgba(255,255,255,0.4); border-radius:50%; filter:blur(2px); }
+  .menu-tile:hover{ transform: translateY(-1px) scale(1.03); }
   .menu-tile:active{ transform:translateY(3px); box-shadow:0 1px 0 #b34d16; }
   .menu-tile .ico{ font-size:24px; display:block; margin-bottom:4px; }
   .menu-tile .lbl{ font-size:11.5px; font-weight:800; color:#5c2e0f; }
@@ -169,6 +311,7 @@
     padding:10px 6px; text-align:center; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px;
     box-shadow: 0 3px 0 #d3a15a; transition: transform .1s ease, box-shadow .1s ease;
   }
+  .mini-tile:hover{ transform: translateY(-1px) scale(1.03); }
   .mini-tile:active{ transform:translateY(2px); box-shadow:0 1px 0 #d3a15a; }
   .mini-tile .ico{ font-size:18px; }
   .mini-tile .lbl{ font-size:10.5px; font-weight:800; color:#6b3f18; }
@@ -238,6 +381,26 @@
 
 <!-- ============ ANA OVERLAY (tüm ekranlar buradan yönetilir) ============ -->
 <div class="overlay" id="mainOverlay">
+  <div class="menu-scene" aria-hidden="true">
+    <div class="zoomLayer">
+      <div class="glare g1"></div>
+      <div class="glare g2"></div>
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="cloud c3"></div>
+      <div class="cloud c4"></div>
+      <div class="mountain back">
+        <svg viewBox="0 0 400 160" preserveAspectRatio="none"><path d="M0 160 L0 95 L45 55 L85 100 L130 40 L175 90 L215 60 L260 110 L300 70 L340 105 L400 60 L400 160 Z" fill="#8fb8d9"/></svg>
+      </div>
+      <div class="mountain front">
+        <svg viewBox="0 0 400 140" preserveAspectRatio="none"><path d="M0 140 L0 110 L40 70 L80 105 L120 55 L165 100 L210 65 L250 100 L290 75 L330 100 L400 80 L400 140 Z" fill="#6f9fc4"/></svg>
+      </div>
+    </div>
+    <div class="motes">
+      <div class="mote"></div><div class="mote"></div><div class="mote"></div><div class="mote"></div>
+      <div class="mote"></div><div class="mote"></div><div class="mote"></div><div class="mote"></div>
+    </div>
+  </div>
   <div class="card" id="mainCard"></div>
 </div>
 
@@ -282,12 +445,11 @@
   const BG_TYPES = ['sunrise','day','sunset','night','aurora','space','city','clouds'];
   const WEATHER_TYPES = ['none','rain','snow','stars','fireflies','fog','leaves','meteor'];
 
-  /* Blok "modları" - rengin ötesinde bloğun gerçek şeklini/dokusunu değiştirir */
-  const BLOCK_STYLES = [
-    { id:'classic',   name:'Klasik',    ico:'🟦', desc:'Yumuşak gölgeli modern bloklar' },
-    { id:'minecraft', name:'Minecraft', ico:'🟩', desc:'Pikselli, blok dokulu küpler' },
-    { id:'cake',      name:'Pasta',     ico:'🍰', desc:'Kremalı, damlamalı pasta dilimleri' },
-    { id:'tower',     name:'Kule',      ico:'🧱', desc:'Taş tuğla dokulu kale blokları' }
+  /* Mağazadaki tüketilebilir takviyeler - kola/enerji içeceği temalı,
+     satın alınınca bir sonraki oyun için "hazırlanır" (armedBoosts) */
+  const CONSUMABLES = [
+    { id:'cola',   name:'Sarı Kola',       ico:'🥤', cost:35, desc:'Bir sonraki oyunda bloklar %25 daha yavaş başlar' },
+    { id:'energy', name:'Enerji İçeceği',  ico:'⚡', cost:60, desc:'Bir sonraki oyunda 1 kez ıskalama seni elemez (kalkan)' }
   ];
 
   const ACHIEVEMENTS = [
@@ -337,6 +499,7 @@
       unlockedThemes: ['classic'],
       currentTheme: 'classic',
       blockStyle: 'classic',
+      armedBoosts: [],
       achievementsUnlocked: [],
       settings: { sound:true, music:true, vibration:true, quality:'high', showFps:false },
       stats: { totalGames:0, totalBlocks:0, totalPerfects:0, maxCombo:0, totalCoinsEarned:0, totalTimePlayed:0, totalScore:0 },
@@ -581,6 +744,7 @@
   let camWorldY = 0, camTargetWorldY = 0;
   let camZoom = 1, camZoomTarget = 1;
   let tapCount = 0, shake = 0, perfectFlash = 0;
+  let activeShield = false, activeSpeedMult = 1;
   let currentBg = 'day', currentWeather = 'none';
   let bgPhase = Math.random()*1000;
   let weatherParticles = [];
@@ -884,16 +1048,12 @@
       ctx.shadowBlur = 8;
     }
 
-    const style = profile.blockStyle || 'classic';
-    if(style === 'minecraft') drawBlockMinecraft(x,y,width,h,color);
-    else if(style === 'cake') drawBlockCake(x,y,width,h,color);
-    else if(style === 'tower') drawBlockTower(x,y,width,h,color);
-    else drawBlockClassic(x,y,width,h,color);
+    drawBlockClassic(x,y,width,h,color);
 
     ctx.restore();
   }
 
-  /* -------- KLASİK: yumuşak gradient + bevel highlight -------- */
+  /* -------- Blok: yumuşak gradient + bevel highlight -------- */
   function drawBlockClassic(x,y,width,h,color){
     const grad = ctx.createLinearGradient(x, y, x, y+h);
     grad.addColorStop(0, lighten(color, 22));
@@ -908,123 +1068,6 @@
     roundRect(x, y, width, h*0.3, 7); ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.14)';
     ctx.fillRect(x, y+h*0.83, width, h*0.17);
-  }
-
-  /* -------- MINECRAFT: keskin köşeli, pikselli blok dokusu -------- */
-  function drawBlockMinecraft(x,y,width,h,color){
-    // Ana gövde - keskin köşeler
-    ctx.fillStyle = color;
-    ctx.fillRect(x,y,width,h);
-
-    // Üst yüz (ışık alan taraf - daha açık ton)
-    ctx.fillStyle = lighten(color, 26);
-    ctx.fillRect(x,y,width,h*0.32);
-
-    // Alt yüz (gölgede kalan taraf - daha koyu ton)
-    ctx.fillStyle = darken(color, 22);
-    ctx.fillRect(x,y+h*0.75,width,h*0.25);
-
-    // Piksel doku - konuma bağlı sabit desen (kaymaz/titremez)
-    ctx.shadowBlur = 0;
-    ctx.save();
-    ctx.globalAlpha = 0.10;
-    const cell = Math.max(6, width/9);
-    for(let px=0; px<width; px+=cell){
-      for(let py=0; py<h; py+=cell){
-        const toggle = (Math.floor((x+px)/cell) + Math.floor(py/cell)) % 2 === 0;
-        ctx.fillStyle = toggle ? '#000000' : '#ffffff';
-        ctx.fillRect(x+px, y+py, cell-1, cell-1);
-      }
-    }
-    ctx.restore();
-
-    // Keskin siyah dış hat
-    ctx.strokeStyle = 'rgba(0,0,0,0.35)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x+1, y+1, width-2, h-2);
-  }
-
-  /* -------- PASTA: kremalı, dalgalı üst kaplama ve damlalar -------- */
-  function drawBlockCake(x,y,width,h,color){
-    const grad = ctx.createLinearGradient(x,y,x,y+h);
-    grad.addColorStop(0, lighten(color, 8));
-    grad.addColorStop(1, color);
-    ctx.fillStyle = grad;
-    roundRect(x,y,width,h,10);
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-
-    // Krema - dalgalı üst kaplama
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.beginPath();
-    const scallops = Math.max(3, Math.round(width/18));
-    const scallopW = width/scallops;
-    ctx.moveTo(x, y+h*0.30);
-    for(let i=0;i<scallops;i++){
-      const midX = x + i*scallopW + scallopW/2;
-      ctx.quadraticCurveTo(midX, y-h*0.02, x+(i+1)*scallopW, y+h*0.30);
-    }
-    ctx.lineTo(x+width, y);
-    ctx.lineTo(x, y);
-    ctx.closePath();
-    ctx.fill();
-
-    // Krema damlaları
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    const dripCount = Math.max(2, Math.round(width/28));
-    for(let i=0;i<dripCount;i++){
-      const dx = x + width*((i+0.5)/dripCount);
-      ctx.beginPath();
-      ctx.moveTo(dx-4, y+h*0.30);
-      ctx.quadraticCurveTo(dx, y+h*0.48, dx+4, y+h*0.30);
-      ctx.fill();
-    }
-
-    // Üstte küçük kiraz/şeker süslemesi
-    ctx.fillStyle = '#ff4d6d';
-    ctx.beginPath();
-    ctx.arc(x+width/2, y+h*0.16, Math.min(6, width*0.09), 0, Math.PI*2);
-    ctx.fill();
-
-    // Alt gölge
-    ctx.fillStyle = 'rgba(0,0,0,0.1)';
-    ctx.fillRect(x, y+h*0.86, width, h*0.14);
-  }
-
-  /* -------- KULE: taş tuğla dokulu kale bloğu -------- */
-  function drawBlockTower(x,y,width,h,color){
-    ctx.fillStyle = color;
-    roundRect(x,y,width,h,3);
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-
-    // Üstte hafif ışık, altta gölge (taş hacmi hissi)
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
-    roundRect(x,y,width,h*0.25,3); ctx.fill();
-    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-    ctx.fillRect(x, y+h*0.8, width, h*0.2);
-
-    // Tuğla derzleri (yatay sıralar + şaşırtmalı dikey çizgiler)
-    ctx.save();
-    ctx.strokeStyle = 'rgba(0,0,0,0.28)';
-    ctx.lineWidth = 1.4;
-    const rows = 3;
-    const rowH = h/rows;
-    for(let r=1; r<rows; r++){
-      const ly = y + r*rowH;
-      ctx.beginPath(); ctx.moveTo(x, ly); ctx.lineTo(x+width, ly); ctx.stroke();
-    }
-    for(let r=0; r<rows; r++){
-      const ly1 = y + r*rowH, ly2 = y + (r+1)*rowH;
-      const offset = (r % 2 === 0) ? 0 : (width/4);
-      for(let vx = x+offset; vx < x+width; vx += width/2){
-        if(vx <= x || vx >= x+width) continue;
-        ctx.beginPath(); ctx.moveTo(vx, ly1); ctx.lineTo(vx, ly2); ctx.stroke();
-      }
-    }
-    ctx.restore();
   }
 
   function hexToRgb(hex){
@@ -1051,7 +1094,7 @@
      MİNİ ÖNİZLEME (menülerde gerçek blok render'ı gösterir -
      düz renkli kare yerine oyundaki asıl çizim kodunu kullanır)
   ========================================================= */
-  function renderMiniBlockPreview(targetCanvas, style, colorHex){
+  function renderMiniBlockPreview(targetCanvas, colorHex){
     if(!targetCanvas) return;
     const dpr = Math.min(window.devicePixelRatio||1, 2);
     const w = targetCanvas.clientWidth || 48, h = targetCanvas.clientHeight || 48;
@@ -1066,10 +1109,7 @@
     ctx.shadowBlur = 4;
     ctx.shadowOffsetY = 2;
     const bw = w*0.74, bh = h*0.5, bx = (w-bw)/2, by = (h-bh)/2 + h*0.08;
-    if(style === 'minecraft') drawBlockMinecraft(bx,by,bw,bh,colorHex);
-    else if(style === 'cake') drawBlockCake(bx,by,bw,bh,colorHex);
-    else if(style === 'tower') drawBlockTower(bx,by,bw,bh,colorHex);
-    else drawBlockClassic(bx,by,bw,bh,colorHex);
+    drawBlockClassic(bx,by,bw,bh,colorHex);
     ctx.restore();
     ctx = saved;
   }
@@ -1112,7 +1152,7 @@
     const last = stack[stack.length-1];
     const levelIndex = last.levelIndex + 1;
     const width = last.width;
-    const speed = Math.min(230 + score*9, 640);
+    const speed = Math.min(230 + score*9, 640) * activeSpeedMult;
     const fromLeft = Math.random() < 0.5;
     const x = fromLeft ? -width : W;
     const dir = fromLeft ? 1 : -1;
@@ -1132,6 +1172,18 @@
     stack=[]; debris=[]; particles=[];
     tapCount=0; shake=0; perfectFlash=0; camZoom=1; camZoomTarget=1;
     runStartTime = performance.now();
+
+    // Mağazadan hazırlanmış takviyeleri bu koşuya uygula, sonra tüket
+    activeSpeedMult = 1; activeShield = false;
+    const boosts = profile.armedBoosts||[];
+    if(boosts.includes('cola')) activeSpeedMult = 0.75;
+    if(boosts.includes('energy')) activeShield = true;
+    if(boosts.length){
+      const names = boosts.map(id => (CONSUMABLES.find(c=>c.id===id)||{}).ico||'').join(' ');
+      if(names) showToast(`${names} Takviye aktif!`);
+      profile.armedBoosts = [];
+      saveProfile();
+    }
 
     scoreValueEl.textContent = "0";
     comboWrapEl.classList.remove('show');
@@ -1170,6 +1222,13 @@
     const overlapWidth = overlapRight-overlapLeft;
 
     if(overlapWidth <= MIN_OVERLAP){
+      if(activeShield){
+        activeShield = false;
+        showToast('🛡️ Enerji içeceği seni korudu!');
+        playSfx('ui');
+        spawnMovingBlock();
+        return;
+      }
       spawnDebris(moving.x, screenY(moving.levelIndex), moving.width, colorForLevel(moving.levelIndex), moving.dir*2);
       endGame();
       return;
@@ -1406,13 +1465,32 @@
   function renderMenuScreen(){
     refreshDailyQuests();
     const isResume = state==='paused';
+    const boosts = profile.armedBoosts||[];
+    const boostNote = boosts.length ? `<div class="item-desc" style="text-align:center;margin:-4px 0 10px;">${boosts.map(id=>(CONSUMABLES.find(c=>c.id===id)||{}).ico||'').join(' ')} Takviye hazır</div>` : '';
+    // Günlük ödül bildirimi: tamamlanmış ama henüz alınmamış görev var mı?
+    const dailyReady = (profile.daily.quests||[]).some(q=>{
+      const val = profile.daily.progress[q.key]||0;
+      return val >= q.target && !profile.daily.claimed.includes(q.id);
+    });
+    const dailyCount = (profile.daily.quests||[]).filter(q=>!profile.daily.claimed.includes(q.id)).length;
     mainCard.innerHTML = `
-      <h1>🧱 BLOCK 9</h1>
-      <div class="subtitle">En yüksek kuleyi sen inşa et</div>
-      <button class="big-btn" id="btnPlay">${isResume ? '▶️ DEVAM ET' : '▶️ BAŞLA'}</button>
-      ${isResume ? '<button class="big-btn small" id="btnRestartFromMenu">🔄 Yeniden Başlat</button>' : ''}
-      <button class="big-btn" id="btnScoreMain">🏆 SKOR</button>
-      <button class="big-btn" id="btnSettingsMain">⚙️ AYARLAR</button>
+      <div class="logoWrap">
+        <div class="logoTitle">🧱 BLOCK 9</div>
+        <div class="logoSub">Build the Highest Tower</div>
+      </div>
+      <div class="curRow">
+        <div class="curPill coinPill"><span class="curIco">🪙</span><span id="menuCoinVal">${profile.coins}</span><span class="addCoinBtn" id="btnAddCoin">+</span></div>
+        <div class="curPill gemPill"><span class="curIco">💎</span><span>250</span></div>
+      </div>
+      <div class="menu-anim">
+        <button class="big-btn" id="btnPlay"><span class="btnIco">▶️</span>${isResume ? 'DEVAM ET' : 'PLAY'}</button>
+        ${isResume ? '<button class="big-btn small" id="btnRestartFromMenu">🔄 Yeniden Başlat</button>' : ''}
+        ${boostNote}
+        <button class="big-btn" id="btnScoreMain"><span class="btnIco">🏆</span>LEADERBOARD</button>
+        <button class="big-btn" id="btnDailyMain" style="position:relative;"><span class="btnIco">🎁</span>DAILY REWARD${dailyReady?`<span class="notif-dot">${dailyCount}</span>`:''}</button>
+        <button class="big-btn gold-glow" id="btnShopMain" style="position:relative;"><span class="btnIco">🛒</span>SHOP<span class="new-tag">NEW</span></button>
+        <button class="big-btn" id="btnSettingsMain"><span class="btnIco">⚙️</span>SETTINGS</button>
+      </div>
       <div class="howto" style="margin-top:14px;">
         <div class="howto-row"><span class="howto-emoji">👆</span> Ekrana dokun, hareket eden bloğu bırak</div>
         <div class="howto-row"><span class="howto-emoji">🎯</span> Tam hizalarsan PERFECT ve combo kazanırsın</div>
@@ -1422,35 +1500,13 @@
     const rb = document.getElementById('btnRestartFromMenu');
     if(rb) rb.onclick = ()=>{ playSfx('ui'); startGame(); };
     document.getElementById('btnScoreMain').onclick = ()=>{ playSfx('ui'); renderLeaderboardScreen(); };
+    document.getElementById('btnDailyMain').onclick = ()=>{ playSfx('ui'); renderDailyScreen(); };
+    document.getElementById('btnShopMain').onclick = ()=>{ playSfx('ui'); renderShopScreen(); };
     document.getElementById('btnSettingsMain').onclick = ()=>{ playSfx('ui'); renderSettingsScreen(); };
+    document.getElementById('btnAddCoin').onclick = ()=>{ playSfx('ui'); renderShopScreen(); };
   }
 
   /* -------- BLOK MODU (görsel stil seçimi) -------- */
-  function renderBlockStyleScreen(){
-    let html = backHeader('🧱 Blok Modu');
-    html += `<div class="subtitle">Bloklarının görünümünü seç — önizlemeler gerçek oyun render'ı</div>`;
-    const previewColor = previewColorForTheme(THEMES.find(t=>t.id===profile.currentTheme) || THEMES[0]);
-    BLOCK_STYLES.forEach(bs=>{
-      const selected = (profile.blockStyle||'classic') === bs.id;
-      html += `<div class="theme-item">
-        <canvas class="theme-swatch style-preview" id="prevStyle_${bs.id}" width="42" height="42"></canvas>
-        <div class="item-info"><div class="item-name">${bs.name}</div><div class="item-desc">${bs.desc}</div></div>
-        <button class="item-btn ${selected?'selected':'buy'}" data-id="${bs.id}">${selected?'✓':'Seç'}</button>
-      </div>`;
-    });
-    mainCard.innerHTML = html;
-    attachBack(renderSettingsScreen);
-    BLOCK_STYLES.forEach(bs=>{
-      renderMiniBlockPreview(document.getElementById('prevStyle_'+bs.id), bs.id, previewColor);
-    });
-    mainCard.querySelectorAll('[data-id]').forEach(btn=>{
-      btn.onclick = ()=>{
-        profile.blockStyle = btn.dataset.id;
-        playSfx('ui'); saveProfile(); renderBlockStyleScreen();
-      };
-    });
-  }
-
   /* -------- HAKKINDA / INFO -------- */
   function renderInfoScreen(){
     let html = backHeader('ℹ️ Hakkında');
@@ -1496,7 +1552,7 @@
     mainCard.innerHTML = html;
     attachBack(renderSettingsScreen);
     THEMES.forEach(t=>{
-      renderMiniBlockPreview(document.getElementById('prevTheme_'+t.id), profile.blockStyle||'classic', previewColorForTheme(t));
+      renderMiniBlockPreview(document.getElementById('prevTheme_'+t.id), previewColorForTheme(t));
     });
     mainCard.querySelectorAll('[data-id]').forEach(btn=>{
       btn.onclick = ()=>{
@@ -1522,7 +1578,20 @@
   function renderShopScreen(){
     let html = backHeader('🛒 Mağaza');
     html += `<div style="text-align:center;font-weight:800;color:#ffb400;margin-bottom:10px;">🪙 ${profile.coins}</div>`;
-    html += `<div class="subtitle">Coinlerini temalar için biriktir, burada mevcut temaları hızlıca satın alabilirsin.</div>`;
+
+    html += `<div class="item-name" style="margin-bottom:8px;">🥤 Takviyeler</div>`;
+    html += `<div class="subtitle" style="margin-bottom:10px;">Satın aldığın takviye bir sonraki oyunda otomatik devreye girer.</div>`;
+    CONSUMABLES.forEach(cs=>{
+      const armed = (profile.armedBoosts||[]).includes(cs.id);
+      html += `<div class="shop-item">
+        <div class="ach-ico">${cs.ico}</div>
+        <div class="item-info"><div class="item-name">${cs.name}</div><div class="item-desc">${cs.desc}</div></div>
+        <button class="item-btn ${armed?'selected':'buy'}" data-cid="${cs.id}">${armed?'Hazır ✓':cs.cost+' 🪙'}</button>
+      </div>`;
+    });
+
+    html += `<div class="item-name" style="margin:16px 0 8px;">🎨 Temalar</div>`;
+    html += `<div class="subtitle" style="margin-bottom:10px;">Coinlerini temalar için biriktir, burada mevcut temaları hızlıca satın alabilirsin.</div>`;
     const shopThemes = THEMES.filter(t=>!profile.unlockedThemes.includes(t.id));
     shopThemes.forEach(t=>{
       html += `<div class="shop-item">
@@ -1537,7 +1606,22 @@
     mainCard.innerHTML = html;
     attachBack(renderSettingsScreen);
     shopThemes.forEach(t=>{
-      renderMiniBlockPreview(document.getElementById('prevShop_'+t.id), profile.blockStyle||'classic', previewColorForTheme(t));
+      renderMiniBlockPreview(document.getElementById('prevShop_'+t.id), previewColorForTheme(t));
+    });
+    mainCard.querySelectorAll('[data-cid]').forEach(btn=>{
+      btn.onclick = ()=>{
+        const cs = CONSUMABLES.find(x=>x.id===btn.dataset.cid);
+        const armed = (profile.armedBoosts||[]).includes(cs.id);
+        if(armed){ return; }
+        if(profile.coins >= cs.cost){
+          profile.coins -= cs.cost;
+          profile.armedBoosts = profile.armedBoosts||[];
+          profile.armedBoosts.push(cs.id);
+          coinValueEl.textContent = profile.coins;
+          playSfx('coin'); showToast(`${cs.ico} ${cs.name} bir sonraki oyun için hazır!`);
+          saveProfile(); renderShopScreen();
+        } else { showToast('🪙 Yetersiz coin'); }
+      };
     });
     mainCard.querySelectorAll('[data-id]').forEach(btn=>{
       btn.onclick = ()=>{
@@ -1592,7 +1676,6 @@
       <div class="mini-grid">
         <button class="mini-tile" id="tileShop"><span class="ico">🛒</span><span class="lbl">Mağaza</span></button>
         <button class="mini-tile" id="tileThemes"><span class="ico">🎨</span><span class="lbl">Temalar</span></button>
-        <button class="mini-tile" id="tileBlockStyle"><span class="ico">🧱</span><span class="lbl">Blok Modu</span></button>
         <button class="mini-tile" id="tileAch"><span class="ico">🏅</span><span class="lbl">Başarımlar</span></button>
         <button class="mini-tile" id="tileStats"><span class="ico">📊</span><span class="lbl">İstatistik</span></button>
         <button class="mini-tile" id="tileDaily"><span class="ico">🎁</span><span class="lbl">Günlük Görev</span></button>
@@ -1610,7 +1693,6 @@
     });
     document.getElementById('tileShop').onclick = ()=>{ playSfx('ui'); renderShopScreen(); };
     document.getElementById('tileThemes').onclick = ()=>{ playSfx('ui'); renderThemesScreen(); };
-    document.getElementById('tileBlockStyle').onclick = ()=>{ playSfx('ui'); renderBlockStyleScreen(); };
     document.getElementById('tileAch').onclick = ()=>{ playSfx('ui'); renderAchievementsScreen(); };
     document.getElementById('tileStats').onclick = ()=>{ playSfx('ui'); renderStatsScreen(); };
     document.getElementById('tileDaily').onclick = ()=>{ playSfx('ui'); renderDailyScreen(); };
