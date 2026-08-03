@@ -292,17 +292,21 @@
     border:2px solid #fff; box-shadow:0 2px 5px rgba(200,20,50,0.5);
   }
 
-  .menu-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
+  .menu-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:8px; margin-top:12px; }
   .menu-tile{
-    background: linear-gradient(180deg,#ffe38a,#ffab54); border:3px solid #7a3510; border-radius:20px;
-    padding:14px 8px; text-align:center; cursor:pointer; position:relative; overflow:hidden;
-    box-shadow: 0 4px 0 #b34d16, inset 0 0 0 1px rgba(255,255,255,0.25); transition: transform .12s ease, box-shadow .12s ease;
+    background: linear-gradient(180deg,#fff3da,#ffdfa8); border:2.5px solid #d3a15a; border-radius:18px;
+    padding:12px 4px 10px; text-align:center; cursor:pointer; position:relative; overflow:hidden;
+    box-shadow: 0 3px 0 #d3a15a, inset 0 0 0 1px rgba(255,255,255,0.4); transition: transform .12s ease, box-shadow .12s ease;
   }
-  .menu-tile::before{ content:''; position:absolute; top:2px; left:10%; width:80%; height:34%; background:rgba(255,255,255,0.4); border-radius:50%; filter:blur(2px); }
-  .menu-tile:hover{ transform: translateY(-1px) scale(1.03); }
-  .menu-tile:active{ transform:translateY(3px); box-shadow:0 1px 0 #b34d16; }
-  .menu-tile .ico{ font-size:24px; display:block; margin-bottom:4px; }
-  .menu-tile .lbl{ font-size:11.5px; font-weight:800; color:#5c2e0f; }
+  .menu-tile::before{ content:''; position:absolute; top:2px; left:10%; width:80%; height:30%; background:rgba(255,255,255,0.5); border-radius:50%; filter:blur(2px); }
+  .menu-tile:hover{ transform: translateY(-1px) scale(1.04); }
+  .menu-tile:active{ transform:translateY(2px); box-shadow:0 1px 0 #d3a15a; }
+  .menu-tile .ico{
+    font-size:19px; display:flex; align-items:center; justify-content:center; margin:0 auto 5px;
+    width:34px; height:34px; border-radius:50%;
+    background: linear-gradient(180deg,#ffe38a,#ffab54); box-shadow: inset 0 -3px 4px rgba(122,53,16,0.18), inset 0 2px 2px rgba(255,255,255,0.6);
+  }
+  .menu-tile .lbl{ font-size:10.5px; font-weight:800; color:#5c2e0f; }
 
   /* İkincil özellikler (Mağaza, Temalar, Başarımlar, vb.) için Ayarlar ekranındaki küçük ızgara */
   .mini-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:10px; }
@@ -429,18 +433,83 @@
   /* =========================================================
      VERİ TANIMLARI
   ========================================================= */
+  /* Temalar artık coin ile doğrudan satın alınmıyor — Seviye ilerlemesi
+     veya belirli bir Başarım ile kilidi açılıyor. Coin'lerin gideceği yer
+     Mağazadaki "Şans Kutusu" (crate) ve takviyeler oldu (bkz. LUCKY_CRATE). */
   const THEMES = [
-    { id:'classic',    name:'Klasik',       cost:0,   bg:'day',     colors:['rainbow'] },
-    { id:'cyberpunk',  name:'Cyberpunk',    cost:150, bg:'city',    colors:['#ff2bd6','#2bf0ff','#7a2bff','#ff2b6e'] },
-    { id:'space',      name:'Uzay',         cost:150, bg:'space',   colors:['#7a5cff','#5c8dff','#c15cff','#5cffe0'] },
-    { id:'desert',     name:'Çöl',          cost:120, bg:'sunset',  colors:['#e8a33d','#d97b3f','#f2c14e','#c96a3c'] },
-    { id:'snow',       name:'Kar',          cost:120, bg:'night',   colors:['#bfe3ff','#eaf6ff','#8fc4ec','#d6ecff'], weather:'snow' },
-    { id:'sakura',     name:'Sakura',       cost:150, bg:'day',     colors:['#ffb7c5','#ff8fab','#ffd6e0','#ff6f91'], weather:'leaves' },
-    { id:'lava',       name:'Lav',          cost:180, bg:'night',   colors:['#ff4e3a','#ff8a2b','#c0392b','#ff2d55'], weather:'meteor' },
-    { id:'tropical',   name:'Tropikal',     cost:130, bg:'day',     colors:['#2ec4b6','#ffd23f','#ff6f59','#4dd0e1'] },
-    { id:'medieval',   name:'Ortaçağ',      cost:140, bg:'sunrise', colors:['#8d6e63','#a1887f','#6d4c41','#bcaaa4'] },
-    { id:'industrial', name:'Endüstriyel',  cost:160, bg:'city',    colors:['#78909c','#546e7a','#ffca28','#90a4ae'] }
+    { id:'classic',    name:'Klasik',       unlockLevel:1,  bg:'day',     colors:['rainbow'] },
+    { id:'tropical',   name:'Tropikal',     unlockLevel:2,  bg:'day',     colors:['#2ec4b6','#ffd23f','#ff6f59','#4dd0e1'] },
+    { id:'desert',     name:'Çöl',          unlockLevel:3,  bg:'sunset',  colors:['#e8a33d','#d97b3f','#f2c14e','#c96a3c'] },
+    { id:'medieval',   name:'Ortaçağ',      unlockLevel:4,  bg:'sunrise', colors:['#8d6e63','#a1887f','#6d4c41','#bcaaa4'] },
+    { id:'snow',       name:'Kar',          unlockLevel:5,  bg:'night',   colors:['#bfe3ff','#eaf6ff','#8fc4ec','#d6ecff'], weather:'snow' },
+    { id:'sakura',     name:'Sakura',       unlockLevel:6,  bg:'day',     colors:['#ffb7c5','#ff8fab','#ffd6e0','#ff6f91'], weather:'leaves' },
+    { id:'industrial', name:'Endüstriyel',  unlockLevel:7,  bg:'city',    colors:['#78909c','#546e7a','#ffca28','#90a4ae'] },
+    { id:'space',      name:'Uzay',         unlockLevel:8,  bg:'space',   colors:['#7a5cff','#5c8dff','#c15cff','#5cffe0'] },
+    { id:'cyberpunk',  name:'Cyberpunk',    unlockAch:'combo_20', bg:'city', colors:['#ff2bd6','#2bf0ff','#7a2bff','#ff2b6e'] },
+    { id:'lava',       name:'Lav',          unlockAch:'perfect_100', bg:'night', colors:['#ff4e3a','#ff8a2b','#c0392b','#ff2d55'], weather:'meteor' }
   ];
+
+  /* Coin sinki: doğrudan tema satın alma yerine "Şans Kutusu".
+     Rastgele ödül verir: coin bonusu, XP, takviye veya (nadir) anında
+     bir sonraki kilitli temanın açılması. */
+  const LUCKY_CRATE = { cost:40 };
+  const CRATE_POOL = [
+    { type:'coins', min:20, max:70, weight:34, label:t=>`🪙 +${t} Coin` },
+    { type:'xp',    min:30, max:90, weight:26, label:t=>`⭐ +${t} XP` },
+    { type:'consumable', weight:24 },
+    { type:'themeUnlock', weight:6 },
+    { type:'jackpot', min:150, max:260, weight:10, label:t=>`💎 BÜYÜK ÖDÜL! +${t} Coin` }
+  ];
+  function openLuckyCrate(){
+    if(profile.coins < LUCKY_CRATE.cost) return null;
+    profile.coins -= LUCKY_CRATE.cost;
+    const totalW = CRATE_POOL.reduce((s,e)=>s+e.weight,0);
+    let r = Math.random()*totalW, pick = CRATE_POOL[0];
+    for(const e of CRATE_POOL){ if(r < e.weight){ pick = e; break; } r -= e.weight; }
+    let resultText = '';
+    if(pick.type === 'coins'){
+      const amt = Math.round(pick.min + Math.random()*(pick.max-pick.min));
+      addCoins(amt); resultText = pick.label(amt);
+    } else if(pick.type === 'jackpot'){
+      const amt = Math.round(pick.min + Math.random()*(pick.max-pick.min));
+      addCoins(amt); resultText = pick.label(amt);
+    } else if(pick.type === 'xp'){
+      const amt = Math.round(pick.min + Math.random()*(pick.max-pick.min));
+      addXP(amt); resultText = pick.label(amt);
+    } else if(pick.type === 'consumable'){
+      const cs = CONSUMABLES[Math.floor(Math.random()*CONSUMABLES.length)];
+      profile.armedBoosts = profile.armedBoosts||[];
+      profile.armedBoosts.push(cs.id);
+      resultText = `${cs.ico} ${cs.name} (bir sonraki oyun için hazır)`;
+    } else if(pick.type === 'themeUnlock'){
+      const locked = THEMES.filter(t=>!profile.unlockedThemes.includes(t.id));
+      if(locked.length){
+        const t = locked[Math.floor(Math.random()*locked.length)];
+        profile.unlockedThemes.push(t.id);
+        resultText = `🎉 Yeni tema açıldı: ${t.name}!`;
+      } else {
+        const amt = 100; addCoins(amt); resultText = `🪙 +${amt} Coin (tüm temalar zaten açık)`;
+      }
+    }
+    saveProfile();
+    return resultText;
+  }
+
+  /* Seviye/başarım şartı sağlanan temaları otomatik açar */
+  function checkThemeUnlocks(){
+    let any = false;
+    THEMES.forEach(t=>{
+      if(profile.unlockedThemes.includes(t.id)) return;
+      const byLevel = t.unlockLevel!==undefined && profile.level >= t.unlockLevel;
+      const byAch = t.unlockAch && profile.achievementsUnlocked.includes(t.unlockAch);
+      if(byLevel || byAch){
+        profile.unlockedThemes.push(t.id);
+        showToast(`🎉 Yeni tema açıldı: ${t.name}!`);
+        any = true;
+      }
+    });
+    if(any) saveProfile();
+  }
 
   const BG_TYPES = ['sunrise','day','sunset','night','aurora','space','city','clouds'];
   const WEATHER_TYPES = ['none','rain','snow','stars','fireflies','fog','leaves','meteor'];
@@ -533,6 +602,7 @@
     }
   }
   refreshDailyQuests();
+  checkThemeUnlocks();
 
   /* =========================================================
      SEVİYE / XP HESABI
@@ -547,6 +617,7 @@
       needed = xpForLevel(profile.level);
       showToast(`⭐ Seviye ${profile.level}'e ulaştın!`);
       checkAchievements();
+      checkThemeUnlocks();
     }
   }
 
@@ -582,7 +653,7 @@
         unlockedAny = true;
       }
     });
-    if(unlockedAny) saveProfile();
+    if(unlockedAny){ saveProfile(); checkThemeUnlocks(); }
   }
 
   /* =========================================================
@@ -798,11 +869,16 @@
     }
   }
 
+  let _bgGradCache = { key:'', grad:null };
   function drawBackground(dt){
     const cols = bgGradientColors(currentBg);
-    const grad = ctx.createLinearGradient(0,0,0,H);
-    grad.addColorStop(0, cols[0]); grad.addColorStop(0.55, cols[1]); grad.addColorStop(1, cols[2]);
-    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+    const key = currentBg+'|'+H;
+    if(_bgGradCache.key !== key){
+      const grad = ctx.createLinearGradient(0,0,0,H);
+      grad.addColorStop(0, cols[0]); grad.addColorStop(0.55, cols[1]); grad.addColorStop(1, cols[2]);
+      _bgGradCache = { key, grad };
+    }
+    ctx.fillStyle = _bgGradCache.grad; ctx.fillRect(0,0,W,H);
 
     bgPhase += dt;
 
@@ -971,13 +1047,15 @@
     }
   }
   function drawParticles(){
-    particles.forEach(p=>{
-      ctx.save();
+    if(!particles.length) return;
+    ctx.save();
+    for(let i=0;i<particles.length;i++){
+      const p = particles[i];
       ctx.globalAlpha = Math.max(0,p.life);
       ctx.fillStyle = p.color;
       ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
-      ctx.restore();
-    });
+    }
+    ctx.restore();
   }
 
   /* =========================================================
@@ -1028,6 +1106,27 @@
     ctx.closePath();
   }
 
+  /* -------- PERF: renk başına gradyan önbelleği --------
+     Her blok her karede yeni bir gradient nesnesi ve (çok pahalı olan)
+     shadowBlur çağrısı yapmak, kule uzadıkça belirgin FPS düşüşüne
+     ("kasma") yol açıyordu. Artık:
+       1) gradyanlar renge göre bir kere üretilip önbelleğe alınıyor,
+       2) shadowBlur SADECE hareket eden aktif blokta (tek blok) ve
+          shadowBlur yerine ucuz bir radyal "halo" katmanıyla taklit ediliyor,
+       3) sabit bloklar için gölge, tek düz (blursuz) dikdörtgenle veriliyor. */
+  const _gradCache = new Map();
+  function blockGradient(color, h){
+    const key = color+'|'+h;
+    let g = _gradCache.get(key);
+    if(g) return g;
+    g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, lighten(color, 22));
+    g.addColorStop(0.5, color);
+    g.addColorStop(1, darken(color, 18));
+    _gradCache.set(key, g);
+    return g;
+  }
+
   function drawBlock(x, y, width, color, opts){
     opts = opts || {};
     const h = BLOCK_HEIGHT;
@@ -1041,11 +1140,17 @@
     ctx.translate(-cx, -cy);
 
     if(opts.glow){
-      ctx.shadowColor = 'rgba(255,255,255,0.85)';
-      ctx.shadowBlur = 24;
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      const haloG = ctx.createRadialGradient(cx, cy, h*0.2, cx, cy, width*0.75);
+      haloG.addColorStop(0, 'rgba(255,255,255,0.55)');
+      haloG.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = haloG;
+      ctx.fillRect(x-14, y-14, width+28, h+28);
+      ctx.restore();
     } else {
-      ctx.shadowColor = 'rgba(0,0,0,0.25)';
-      ctx.shadowBlur = 8;
+      ctx.fillStyle = 'rgba(20,10,5,0.16)';
+      ctx.fillRect(x+2, y+h-3, width, 6);
     }
 
     drawBlockClassic(x,y,width,h,color);
@@ -1055,19 +1160,17 @@
 
   /* -------- Blok: yumuşak gradient + bevel highlight -------- */
   function drawBlockClassic(x,y,width,h,color){
-    const grad = ctx.createLinearGradient(x, y, x, y+h);
-    grad.addColorStop(0, lighten(color, 22));
-    grad.addColorStop(0.5, color);
-    grad.addColorStop(1, darken(color, 18));
-    ctx.fillStyle = grad;
-    roundRect(x,y,width,h,7);
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.fillStyle = blockGradient(color, h);
+    roundRect(0,0,width,h,7);
     ctx.fill();
 
-    ctx.shadowBlur = 0;
     ctx.fillStyle = 'rgba(255,255,255,0.22)';
-    roundRect(x, y, width, h*0.3, 7); ctx.fill();
+    roundRect(0, 0, width, h*0.3, 7); ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.14)';
-    ctx.fillRect(x, y+h*0.83, width, h*0.17);
+    ctx.fillRect(0, h*0.83, width, h*0.17);
+    ctx.restore();
   }
 
   function hexToRgb(hex){
@@ -1466,31 +1569,46 @@
     refreshDailyQuests();
     const isResume = state==='paused';
     const boosts = profile.armedBoosts||[];
-    const boostNote = boosts.length ? `<div class="item-desc" style="text-align:center;margin:-4px 0 10px;">${boosts.map(id=>(CONSUMABLES.find(c=>c.id===id)||{}).ico||'').join(' ')} Takviye hazır</div>` : '';
+    const boostNote = boosts.length ? `<div class="item-desc" style="text-align:center;margin:-2px 0 10px;">${boosts.map(id=>(CONSUMABLES.find(c=>c.id===id)||{}).ico||'').join(' ')} Takviye hazır</div>` : '';
     // Günlük ödül bildirimi: tamamlanmış ama henüz alınmamış görev var mı?
     const dailyReady = (profile.daily.quests||[]).some(q=>{
       const val = profile.daily.progress[q.key]||0;
       return val >= q.target && !profile.daily.claimed.includes(q.id);
     });
     const dailyCount = (profile.daily.quests||[]).filter(q=>!profile.daily.claimed.includes(q.id)).length;
+    const xpNeeded = xpForLevel(profile.level);
+    const xpPct = Math.min(100, Math.round((profile.xp/xpNeeded)*100));
+
     mainCard.innerHTML = `
       <div class="logoWrap">
         <div class="logoTitle">🧱 BLOCK 9</div>
         <div class="logoSub">Build the Highest Tower</div>
       </div>
-      <div class="curRow">
-        <div class="curPill coinPill"><span class="curIco">🪙</span><span id="menuCoinVal">${profile.coins}</span><span class="addCoinBtn" id="btnAddCoin">+</span></div>
-        <div class="curPill gemPill"><span class="curIco">💎</span><span>250</span></div>
+
+      <div class="lvl-row">
+        <div class="lvl-badge">⭐ Lv ${profile.level}</div>
+        <div class="xp-bar"><div class="xp-fill" style="width:${xpPct}%"></div></div>
       </div>
+
+      <div class="curRow">
+        <div class="curPill coinPill" id="btnAddCoin" style="cursor:pointer;"><span class="curIco">🪙</span><span id="menuCoinVal">${profile.coins}</span><span class="addCoinBtn">+</span></div>
+        <div class="curPill" id="btnScoreMain" style="cursor:pointer;background:linear-gradient(180deg,#fff4d6,#ffdb8a); color:#7a4600; border:1.5px solid #e8a93f;"><span class="curIco" style="background:radial-gradient(circle at 35% 30%,#fff2b0,#ffb300 70%);">🏆</span><span>${profile.bestScore}</span></div>
+      </div>
+
       <div class="menu-anim">
-        <button class="big-btn" id="btnPlay"><span class="btnIco">▶️</span>${isResume ? 'DEVAM ET' : 'PLAY'}</button>
+        <button class="big-btn" id="btnPlay"><span class="btnIco">▶️</span>${isResume ? 'DEVAM ET' : 'OYNA'}</button>
         ${isResume ? '<button class="big-btn small" id="btnRestartFromMenu">🔄 Yeniden Başlat</button>' : ''}
         ${boostNote}
-        <button class="big-btn" id="btnScoreMain"><span class="btnIco">🏆</span>LEADERBOARD</button>
-        <button class="big-btn" id="btnDailyMain" style="position:relative;"><span class="btnIco">🎁</span>DAILY REWARD${dailyReady?`<span class="notif-dot">${dailyCount}</span>`:''}</button>
-        <button class="big-btn gold-glow" id="btnShopMain" style="position:relative;"><span class="btnIco">🛒</span>SHOP<span class="new-tag">NEW</span></button>
-        <button class="big-btn" id="btnSettingsMain"><span class="btnIco">⚙️</span>SETTINGS</button>
+        <div class="menu-grid">
+          <button class="menu-tile" id="tileShopMain" style="position:relative;"><span class="ico">🛒</span><span class="lbl">Mağaza</span></button>
+          <button class="menu-tile" id="tileThemesMain"><span class="ico">🎨</span><span class="lbl">Temalar</span></button>
+          <button class="menu-tile" id="tileDailyMain" style="position:relative;"><span class="ico">🎁</span><span class="lbl">Günlük</span>${dailyReady?`<span class="notif-dot" style="top:-6px;right:6px;">${dailyCount}</span>`:''}</button>
+          <button class="menu-tile" id="tileAchMain"><span class="ico">🏅</span><span class="lbl">Başarımlar</span></button>
+          <button class="menu-tile" id="tileStatsMain"><span class="ico">📊</span><span class="lbl">İstatistik</span></button>
+          <button class="menu-tile" id="tileSettingsMain"><span class="ico">⚙️</span><span class="lbl">Ayarlar</span></button>
+        </div>
       </div>
+
       <div class="howto" style="margin-top:14px;">
         <div class="howto-row"><span class="howto-emoji">👆</span> Ekrana dokun, hareket eden bloğu bırak</div>
         <div class="howto-row"><span class="howto-emoji">🎯</span> Tam hizalarsan PERFECT ve combo kazanırsın</div>
@@ -1500,9 +1618,12 @@
     const rb = document.getElementById('btnRestartFromMenu');
     if(rb) rb.onclick = ()=>{ playSfx('ui'); startGame(); };
     document.getElementById('btnScoreMain').onclick = ()=>{ playSfx('ui'); renderLeaderboardScreen(); };
-    document.getElementById('btnDailyMain').onclick = ()=>{ playSfx('ui'); renderDailyScreen(); };
-    document.getElementById('btnShopMain').onclick = ()=>{ playSfx('ui'); renderShopScreen(); };
-    document.getElementById('btnSettingsMain').onclick = ()=>{ playSfx('ui'); renderSettingsScreen(); };
+    document.getElementById('tileShopMain').onclick = ()=>{ playSfx('ui'); renderShopScreen(); };
+    document.getElementById('tileThemesMain').onclick = ()=>{ playSfx('ui'); renderThemesScreen(); };
+    document.getElementById('tileDailyMain').onclick = ()=>{ playSfx('ui'); renderDailyScreen(); };
+    document.getElementById('tileAchMain').onclick = ()=>{ playSfx('ui'); renderAchievementsScreen(); };
+    document.getElementById('tileStatsMain').onclick = ()=>{ playSfx('ui'); renderStatsScreen(); };
+    document.getElementById('tileSettingsMain').onclick = ()=>{ playSfx('ui'); renderSettingsScreen(); };
     document.getElementById('btnAddCoin').onclick = ()=>{ playSfx('ui'); renderShopScreen(); };
   }
 
@@ -1537,16 +1658,21 @@
   function attachBack(target){ document.getElementById('btnBack').onclick = ()=>{ playSfx('ui'); (target||renderMenuScreen)(); }; }
 
   /* -------- TEMALAR -------- */
+  function themeLockLabel(t){
+    if(t.unlockLevel!==undefined) return `Seviye ${t.unlockLevel}'de açılır`;
+    if(t.unlockAch){ const a = ACHIEVEMENTS.find(x=>x.id===t.unlockAch); return a ? `"${a.name}" başarımıyla açılır` : 'Başarımla açılır'; }
+    return 'Kilitli';
+  }
   function renderThemesScreen(){
     let html = backHeader('🎨 Temalar');
-    html += `<div id="coinLine" style="text-align:center;font-weight:800;color:#ffb400;margin-bottom:10px;">🪙 ${profile.coins}</div>`;
+    html += `<div class="subtitle" style="margin-bottom:12px;">Temaların kilidi coin ile değil, seviye atlayarak ve başarımlarla açılır. Coin'lerini Mağaza'daki Şans Kutusu ve takviyeler için biriktir.</div>`;
     THEMES.forEach(t=>{
       const unlocked = profile.unlockedThemes.includes(t.id);
       const selected = profile.currentTheme === t.id;
       html += `<div class="theme-item">
         <canvas class="theme-swatch" id="prevTheme_${t.id}" width="42" height="42"></canvas>
-        <div class="item-info"><div class="item-name">${t.name}</div><div class="item-desc">${unlocked ? (selected?'Seçili':'Sahipsin') : t.cost+' 🪙'}</div></div>
-        <button class="item-btn ${selected?'selected':(unlocked?'buy':'locked')}" data-id="${t.id}">${selected?'✓':(unlocked?'Seç':'Satın Al')}</button>
+        <div class="item-info"><div class="item-name">${t.name}</div><div class="item-desc">${unlocked ? (selected?'Seçili':'Sahipsin') : themeLockLabel(t)}</div></div>
+        <button class="item-btn ${selected?'selected':(unlocked?'buy':'locked')}" data-id="${t.id}" ${unlocked?'':'disabled'}>${selected?'✓':(unlocked?'Seç':'🔒')}</button>
       </div>`;
     });
     mainCard.innerHTML = html;
@@ -1560,15 +1686,8 @@
         const unlocked = profile.unlockedThemes.includes(t.id);
         if(unlocked){
           profile.currentTheme = t.id; playSfx('ui'); saveProfile(); refreshMenuBackdrop(); renderThemesScreen();
-        } else if(profile.coins >= t.cost){
-          profile.coins -= t.cost;
-          profile.unlockedThemes.push(t.id);
-          profile.currentTheme = t.id;
-          coinValueEl.textContent = profile.coins;
-          playSfx('coin'); showToast(`🎉 ${t.name} teması açıldı!`);
-          checkAchievements(); saveProfile(); refreshMenuBackdrop(); renderThemesScreen();
         } else {
-          showToast('🪙 Yetersiz coin');
+          showToast('🔒 ' + themeLockLabel(t));
         }
       };
     });
@@ -1590,24 +1709,15 @@
       </div>`;
     });
 
-    html += `<div class="item-name" style="margin:16px 0 8px;">🎨 Temalar</div>`;
-    html += `<div class="subtitle" style="margin-bottom:10px;">Coinlerini temalar için biriktir, burada mevcut temaları hızlıca satın alabilirsin.</div>`;
-    const shopThemes = THEMES.filter(t=>!profile.unlockedThemes.includes(t.id));
-    shopThemes.forEach(t=>{
-      html += `<div class="shop-item">
-        <canvas class="theme-swatch" id="prevShop_${t.id}" width="42" height="42"></canvas>
-        <div class="item-info"><div class="item-name">${t.name} Teması</div><div class="item-desc">${t.cost} 🪙</div></div>
-        <button class="item-btn buy" data-id="${t.id}">Al</button>
+    html += `<div class="item-name" style="margin:16px 0 8px;">🎁 Şans Kutusu</div>`;
+    html += `<div class="subtitle" style="margin-bottom:10px;">Coin, XP, takviye ve nadiren anında tema kilidi kazandırabilecek bir kutu aç. Temalar artık doğrudan satın alınmıyor — seviye atlayarak ve başarımlarla açılıyor.</div>`;
+    html += `<div class="shop-item" id="crateItem" style="cursor:pointer;">
+        <div class="ach-ico">🎁</div>
+        <div class="item-info"><div class="item-name">Şans Kutusu</div><div class="item-desc">Rastgele ödül: coin, XP, takviye veya tema</div></div>
+        <button class="item-btn buy gold-glow" id="crateBtn" style="box-shadow:none;">${LUCKY_CRATE.cost} 🪙</button>
       </div>`;
-    });
-    if(THEMES.every(t=>profile.unlockedThemes.includes(t.id))){
-      html += `<div class="subtitle" style="margin-top:20px;">🎉 Tüm temaları açtın, koleksiyonun tam!</div>`;
-    }
     mainCard.innerHTML = html;
     attachBack(renderSettingsScreen);
-    shopThemes.forEach(t=>{
-      renderMiniBlockPreview(document.getElementById('prevShop_'+t.id), previewColorForTheme(t));
-    });
     mainCard.querySelectorAll('[data-cid]').forEach(btn=>{
       btn.onclick = ()=>{
         const cs = CONSUMABLES.find(x=>x.id===btn.dataset.cid);
@@ -1623,18 +1733,15 @@
         } else { showToast('🪙 Yetersiz coin'); }
       };
     });
-    mainCard.querySelectorAll('[data-id]').forEach(btn=>{
-      btn.onclick = ()=>{
-        const t = THEMES.find(x=>x.id===btn.dataset.id);
-        if(profile.coins >= t.cost){
-          profile.coins -= t.cost;
-          profile.unlockedThemes.push(t.id);
-          coinValueEl.textContent = profile.coins;
-          playSfx('coin'); showToast(`🎉 ${t.name} teması açıldı!`);
-          checkAchievements(); saveProfile(); renderShopScreen();
-        } else { showToast('🪙 Yetersiz coin'); }
-      };
-    });
+    const crateBtn = document.getElementById('crateBtn');
+    crateBtn.onclick = ()=>{
+      if(profile.coins < LUCKY_CRATE.cost){ showToast('🪙 Yetersiz coin'); return; }
+      playSfx('coin');
+      const resultText = openLuckyCrate();
+      coinValueEl.textContent = profile.coins;
+      if(resultText){ showToast(resultText); playSfx('achievement'); vibrate(20); checkAchievements(); }
+      renderShopScreen();
+    };
   }
 
   /* -------- BAŞARIMLAR -------- */
